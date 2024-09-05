@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="company">
+
+	<insert id="insertItem">
+		INSERT INTO item (item_id, com_id, item_name,
+		item_model, item_make, item_m12, item_m36, item_m60, item_attr,
+		item_as, cate_id)
+		VALUES (#{itemId}, 'COM00001', #{itemName},
+		#{itemModel}, #{itemMake}, #{itemM12}, #{itemM36}, #{itemM60},
+		#{itemAttr}, #{itemAs}, #{cateId})
+	</insert>
+	
+	<resultMap id="ComInfoMap" type="kr.or.ddit.vo.CompanyVO">
+		<result property="comId" column="comId" />
+		<result property="comPass" column="comPass" />
+		<result property="comName" column="comName" />
+		<result property="comCeo" column="comCeo" />
+		<result property="comNo" column="comNo" />
+		<result property="comAddr" column="comAddr" />
+		<result property="comAddrDetail" column="comAddrDetail" />
+		<result property="comZip" column="comZip" />
+		<result property="comTel" column="comTel" />
+		<result property="comEmail" column="comEmail" />
+		<result property="comResname" column="comResname" />
+		<result property="comRestel" column="comRestel" />
+		<result property="comSignout" column="comSignout" />
+		<result property="comAuth" column="comAuth" />
+	</resultMap>
+
+	<select id="getComInfo" resultMap="ComInfoMap">
+		select com_id comId, com_pass comPass, com_name comName,
+		com_ceo comCeo, com_no comNo, com_addr comAddr,
+		com_addr_detail comAddrDetail, com_zip comZip, com_tel comTel,
+		com_email comEmail, com_resname comResname, com_restel comRestel,
+		com_signout comSignout, com_auth comAuth
+		from company where com_id = #{comId}
+	</select>
+	
+	<update id="updateComInfo">
+		update company
+		set com_pass = #{comPass}, com_name = #{comName}, com_ceo = #{comCeo}, com_no = #{comNo}, com_addr = #{comAddr},
+		 com_addr_detail = #{comAddrDetail}, com_zip = #{comZip}, com_tel = #{comTel}, com_email = #{comEmail}, com_resname = #{comResname}, com_restel = #{comRestel}
+		where com_id = #{comId}
+	</update>
+	
+	<update id="signOut">
+		update company
+		set com_signout = 'Y'
+		where com_id = #{comId}
+	</update>
+	
+	<select id="getIdPass" resultType="kr.or.ddit.vo.CompanyVO">
+		select com_id comId, com_pass comPass
+		from company
+		where com_id = #{comId}
+	</select>
+	
+		<resultMap id="ItemVOResultMap" type="kr.or.ddit.vo.ItemVO">
+		<result property="itemId" column="itemId" />
+		<result property="itemName" column="itemName" />
+		<result property="itemModel" column="itemModel" />
+		<result property="itemMake" column="itemMake" />
+		<result property="itemM12" column="itemM12" />
+		<result property="itemM36" column="itemM36" />
+		<result property="itemM60" column="itemM60" />
+		<result property="itemAttr" column="itemAttr" />
+		<result property="itemAs" column="itemAs" />
+		<result property="cateId" column="cateId" />
+		<result property="itemDate" column="itemDate" />
+		<result property="fileType" column="fileType" />
+		<result property="streFileNm" column="streFileNm" />
+		<result property="fileExtsn" column="fileExtsn" />
+	</resultMap>
+
+	<select id="getItemInfo" resultMap="ItemVOResultMap">
+		SELECT
+		i.item_id AS itemId,
+		i.item_name AS itemName,
+		i.item_model AS itemModel,
+		i.item_make AS itemMake,	
+		i.item_m12 AS itemM12,
+		i.item_m36 AS itemM36,
+		i.item_m60 AS itemM60,
+		i.item_attr AS itemAttr,
+		i.item_as AS itemAs,
+		i.cate_id AS cateId,
+		i.item_date AS itemDate,
+		ia.file_type AS fileType,
+		ia.file_stre_nm AS streFileNm,
+		ia.file_extsn AS fileExtsn,
+        c.com_id AS comId
+		FROM item i
+		JOIN item_atchfile ia ON i.item_id = ia.item_id
+		JOIN company c ON c.com_id = i.com_id
+		WHERE ia.file_type = 1 and c.com_id = #{com_id} and item_del = 'N' order by i.item_id asc
+	</select>
+
+	<select id="getItemInfoPasing" resultMap="ItemVOResultMap">
+    		<![CDATA[
+	SELECT A.* 
+FROM (
+    SELECT ROWNUM AS RNUM, B.* 
+    FROM (
+		SELECT
+		i.item_id AS itemId,
+		i.item_name AS itemName,
+		i.item_model AS itemModel,
+		i.item_make AS itemMake,	
+		i.item_m12 AS itemM12,
+		i.item_m36 AS itemM36,
+		i.item_m60 AS itemM60,
+		i.item_attr AS itemAttr,
+		i.item_as AS itemAs,
+		i.cate_id AS cateId,
+		i.item_date AS itemDate,
+		ia.file_type AS fileType,
+		ia.file_stre_nm AS streFileNm,
+		ia.file_extsn AS fileExtsn,
+        c.com_id AS comId
+		FROM item i
+		JOIN item_atchfile ia ON i.item_id = ia.item_id
+		JOIN company c ON c.com_id = i.com_id
+		WHERE ia.file_type = 1 and c.com_id = #{com_id} and item_del = 'N' order by i.item_id asc
+		    ) B
+    WHERE ROWNUM <= #{end}
+) A
+WHERE A.RNUM >= #{start}
+		]]>
+	</select>
+	
+
+</mapper>

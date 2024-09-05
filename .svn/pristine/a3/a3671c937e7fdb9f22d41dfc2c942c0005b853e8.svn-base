@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<properties resource="db.properties" />
+	
+	<settings>
+		<!--
+			데이터 등록시 해당 속성값이 존재하지 않으면 부적합한 열 유형:1111 예외 발생함
+			이 경우 해당타입을 명시적으로 알려주던지 아래와 같이 NULL값에 대해 특정값으로 설정이 가능하다.
+		-->
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	
+
+	<environments default="dev">
+		<environment id="dev">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+				<property name="poolMaximumActiveConnections" value="2"/> <!-- 활성화된 최대 커넥션 수 -->
+				<property name="poolMaximumIdleConnections" value="2"/> <!-- 유휴상태에서 최대 커넥션 수 -->
+			</dataSource>
+		</environment>
+
+	</environments>
+
+	<mappers>
+		<mapper resource="mapper/admin.xml" />
+		<mapper resource="mapper/basket.xml"/>
+		<mapper resource="mapper/card.xml" />
+		<mapper resource="mapper/company.xml"/>
+		<mapper resource="mapper/itemInquiry.xml" />
+		<mapper resource="mapper/useInquiry.xml" />
+		<mapper resource="mapper/item.xml"/>
+		<mapper resource="mapper/order.xml" />
+		<mapper resource="mapper/recentItem.xml"/>
+		<mapper resource="mapper/rental.xml" />
+		<mapper resource="mapper/user.xml"/>
+		<mapper resource="mapper/review.xml"/>
+		<mapper resource="mapper/cart.xml"/>
+		<mapper resource="mapper/notice.xml"/>
+		<mapper resource="mapper/partnership.xml"/>
+		<mapper resource="mapper/atchFile.xml"/>
+		<mapper resource="mapper/category.xml"/>
+		<mapper resource="mapper/refund.xml"/>
+		<mapper resource="mapper/wish.xml"/>
+	</mappers>
+
+</configuration>

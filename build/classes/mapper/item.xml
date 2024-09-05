@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="item">
+
+
+
+
+	<resultMap id="ItemVOResultMap" type="kr.or.ddit.vo.ItemVO">
+		<result property="itemId" column="itemId" />
+		<result property="itemName" column="itemName" />
+		<result property="itemModel" column="itemModel" />
+		<result property="itemMake" column="itemMake" />
+		<result property="itemM12" column="itemM12" />
+		<result property="itemM36" column="itemM36" />
+		<result property="itemM60" column="itemM60" />
+		<result property="itemAttr" column="itemAttr" />
+		<result property="itemAs" column="itemAs" />
+		<result property="cateId" column="cateId" />
+		<result property="itemDate" column="itemDate" />
+		<result property="fileType" column="fileType" />
+		<result property="streFileNm" column="streFileNm" />
+		<result property="fileExtsn" column="fileExtsn" />
+	</resultMap>
+
+	<select id="getItemInfo" resultMap="ItemVOResultMap">
+		SELECT
+		i.item_id AS itemId,
+		i.item_name AS itemName,
+		i.item_model AS itemModel,
+		i.item_make AS itemMake,
+		i.item_m12 AS itemM12,
+		i.item_m36 AS itemM36,
+		i.item_m60 AS itemM60,
+		i.item_attr AS itemAttr,
+		i.item_as AS itemAs,
+		i.cate_id AS cateId,
+		i.item_date AS itemDate,
+		ia.file_type AS fileType,
+		ia.file_stre_nm AS streFileNm,
+		ia.file_extsn AS fileExtsn
+		FROM item i
+		JOIN item_atchfile ia ON i.item_id = ia.item_id
+		WHERE ia.file_type = 1 AND i.item_id = #{itemId}
+	</select>
+	
+	<select id="getItemInfoPasing" resultMap="ItemVOResultMap">
+    		<![CDATA[
+	SELECT A.* 
+FROM (
+    SELECT ROWNUM AS RNUM, B.* 
+    FROM (
+        WITH CountedItems AS (
+		SELECT item_name, COUNT(*) AS count
+		FROM item
+		GROUP BY item_name
+		),
+		MinPricedItems AS (
+		SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+		FROM item i
+		JOIN CountedItems ci ON i.item_name = ci.item_name
+		GROUP BY i.item_name
+		)
+		SELECT
+		i.item_id AS itemId,
+		i.item_name AS itemName,
+		i.item_model AS itemModel,
+		i.item_make AS itemMake,
+		i.item_m12 AS itemM12,
+		i.item_m36 AS itemM36,
+		i.item_m60 AS itemM60,
+		i.item_attr AS itemAttr,
+		i.item_as AS itemAs,
+		i.cate_id AS cateId,
+		i.item_date AS itemDate,
+		ia.file_type AS fileType,
+		ia.file_stre_nm AS streFileNm,
+		ia.file_extsn AS fileExtsn
+		FROM item i
+		JOIN MinPricedItems mi ON i.item_name = mi.item_name AND i.item_m60 =
+		mi.min_item_m60
+		JOIN item_atchfile ia ON i.item_id = ia.item_id
+        JOIN company c ON c.com_id = c.com_id
+		WHERE ia.file_type = 1 AND c.com_id = #{comId}
+    ) B
+    WHERE ROWNUM <= #{end}
+) A
+WHERE A.RNUM >= #{start}
+		]]>
+	</select>
+
+
+	<select id="getAllCategory"
+		resultType="kr.or.ddit.vo.CategoryVO">
+		select cate_id cateId from
+		category
+	</select>
+
+	<select id="itemMakeFilter"
+		resultType="String">
+		select distinct item_make  from item
+		where cate_id = #{cateId} order by item_make
+	</select>
+
+	<select id="itemAttrFilter"
+		resultType="String">
+		select distinct item_attr  from item
+		where cate_id = #{cateId} order by item_attr
+	</select>
+
+	<select id="comNameFilter"
+		resultType="String">
+		select distinct com_name  from item, company
+		where cate_id = #{cateId} and item.com_id = company.com_id
+		order by com_name
+	</select>
+
+	<select id="getSubImg" resultType="String">
+		select file_stre_nm streFileNm
+		from item_atchfile
+		where item_id = #{ItemId} and file_type = 2
+	</select>
+
+	<select id="getBestItemList" resultType="kr.or.ddit.vo.ItemVO">
+		select item_id itemId,
+		com_id comId, item_name itemName,
+		item_model itemModel, item_make
+		itemMake, item_m12 itemM12,
+		item_m36 itemM36, item_m60 itemM60,
+		item_attr itemAttr, item_as itemAs, cate_id cateId
+		from item
+	</select>
+
+	<select id="getMaxItemId" resultType="String">
+		select
+		TO_CHAR(item_seq.nextval, 'FM0000') from dual
+	</select>
+
+	<insert id="insertItem">
+		INSERT INTO item (item_id, com_id, item_name,
+		item_model, item_make, item_m12, item_m36, item_m60, item_attr,
+		item_as, cate_id)
+		VALUES (#{itemId}, #{comId}, #{itemName},
+		#{itemModel}, #{itemMake}, #{itemM12}, #{itemM36}, #{itemM60},
+		#{itemAttr}, #{itemAs}, #{cateId})
+	</insert>
+
+	<update id="updateItem">
+        update item
+        set item_name = #{itemName}, item_model = #{itemModel}, item_make = #{itemMake}, item_attr = #{itemAttr}, item_m12 = #{itemM12}, item_m36 = #{itemM36}, item_m60 = #{itemM60}, item_as = #{itemAs}
+        where item_id = #{itemId}
+	</update>
+
+	<update id="deleteItem">
+        update item
+        set item_del = 'Y'
+        where item_id = #{itemId}
+	</update>
+
+	<select id="getAirBest3" resultType="kr.or.ddit.vo.ItemVO">
+		<![CDATA[
+		    WITH CountedItems AS (
+		    SELECT item_name, COUNT(*) AS count
+		    FROM item
+		    GROUP BY item_name
+		),
+		MinPricedItems AS (
+		    SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+		    FROM item i
+		    JOIN CountedItems ci ON i.item_name = ci.item_name
+		    GROUP BY i.item_name
+		)
+		SELECT 
+		    i.item_id AS itemId,
+		    i.item_name AS itemName,
+		    i.item_model AS itemModel,
+		    i.item_make AS itemMake,
+		    i.item_m12 AS itemM12,
+		    i.item_m36 AS itemM36,
+		    i.item_m60 AS itemM60,
+		    i.item_attr AS itemAttr,
+		    i.item_as AS itemAs,
+		    i.cate_id AS cateId,
+		    i.item_date AS itemDate,
+		    ia.file_type AS fileType,
+		    ia.file_stre_nm AS streFileNm,
+		    ia.file_extsn AS fileExtsn
+		FROM item i
+		JOIN MinPricedItems mi ON i.item_name = mi.item_name AND i.item_m60 = mi.min_item_m60
+		JOIN item_atchfile ia ON i.item_id = ia.item_id
+		WHERE ia.file_type = 1 AND cate_id = '에어컨' and rownum <=4 and file_type = 1 and item_del = 'N'
+		]]>
+	</select>
+
+	<select id="getRefBest3" resultType="kr.or.ddit.vo.ItemVO">
+		<![CDATA[
+			select file_stre_nm streFileNm, item_name itemName, item_model itemModel, item_m60 itemM60, file_extsn fileExtsn, item.item_id itemId
+			from item, item_atchfile
+			where item.item_id=item_atchfile.item_id and cate_id = '냉장고' and rownum <=4 and file_type = 1 and item_del = 'N'
+		]]>
+	</select>
+
+	<select id="getLaundryBest3" resultType="kr.or.ddit.vo.ItemVO">
+		<![CDATA[
+			select file_stre_nm streFileNm, item_name itemName, item_model itemModel, item_m60 itemM60, file_extsn fileExtsn, item.item_id itemId
+			from item, item_atchfile
+			where item.item_id=item_atchfile.item_id and cate_id = '세탁가전' and rownum <=4 and file_type = 1 and item_del = 'N'
+		]]>
+	</select>
+
+	<select id="getStylerBest3" resultType="kr.or.ddit.vo.ItemVO">
+		<![CDATA[
+			select file_stre_nm streFileNm, item_name itemName, item_model itemModel, item_m60 itemM60, file_extsn fileExtsn, item.item_id itemId
+			from item, item_atchfile
+			where item.item_id=item_atchfile.item_id and cate_id = '스타일러' and rownum <=4 and file_type = 1 and item_del = 'N'
+		]]>
+	</select>
+
+	<select id="getTvBest3" resultType="kr.or.ddit.vo.ItemVO">
+		<![CDATA[
+			select file_stre_nm streFileNm, item_name itemName, item_model itemModel, item_m60 itemM60, file_extsn fileExtsn, item.item_id itemId
+			from item, item_atchfile
+			where item.item_id=item_atchfile.item_id and cate_id = 'TV' and rownum <=4 and file_type = 1 and item_del = 'N'
+		]]>
+	</select>
+
+	<select id="countItem" resultType="Integer">
+		select count(*) cnt from
+		( WITH
+		CountedItems AS (
+		SELECT item_name, COUNT(*) AS count
+		FROM item
+		GROUP BY item_name
+		),
+		MinPricedItems AS (
+		SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+		FROM item i
+		JOIN CountedItems ci ON i.item_name = ci.item_name
+		GROUP BY i.item_name
+		)
+		SELECT
+		i.item_id AS itemId,
+		i.item_name AS itemName,
+		i.item_model AS itemModel,
+		i.item_make AS itemMake,
+		i.item_m12 AS itemM12,
+		i.item_m36 AS itemM36,
+		i.item_m60 AS itemM60,
+		i.item_attr AS itemAttr,
+		i.item_as AS itemAs,
+		i.cate_id AS cateId,
+		ia.file_type AS fileType,
+		ia.file_stre_nm AS streFileNm,
+		ia.file_extsn AS fileExtsn
+		FROM item i
+		JOIN MinPricedItems mi ON i.item_name =
+		mi.item_name AND i.item_m60 = mi.min_item_m60
+		JOIN item_atchfile ia ON
+		i.item_id = ia.item_id
+		WHERE ia.file_type = 1 AND i.cate_id =
+		#{cateId})
+
+	</select>
+
+	<select id="getCategoryItemList"
+		resultType="kr.or.ddit.vo.ItemVO">
+		<![CDATA[
+		    WITH CountedItems AS (
+		    SELECT item_name, COUNT(*) AS count
+		    FROM item
+		    GROUP BY item_name
+		),
+		MinPricedItems AS (
+		    SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+		    FROM item i
+		    JOIN CountedItems ci ON i.item_name = ci.item_name
+		    GROUP BY i.item_name
+		)
+		SELECT 
+			c.com_name AS comName,
+		    i.item_id AS itemId,
+		    i.item_name AS itemName,
+		    i.item_model AS itemModel,
+		    i.item_make AS itemMake,
+		    i.item_m12 AS itemM12,
+		    i.item_m36 AS itemM36,
+		    i.item_m60 AS itemM60,
+		    i.item_attr AS itemAttr,
+		    i.item_as AS itemAs,
+		    i.cate_id AS cateId,
+		    i.item_date AS itemDate,
+		    ia.file_type AS fileType,
+		    ia.file_stre_nm AS streFileNm,
+		    ia.file_extsn AS fileExtsn
+		FROM item i
+		JOIN MinPricedItems mi ON i.item_name = mi.item_name AND i.item_m60 = mi.min_item_m60
+		JOIN company c ON i.com_id = c.com_id
+		JOIN item_atchfile ia ON i.item_id = ia.item_id
+		WHERE ia.file_type = 1 AND i.cate_id = #{cateId}
+		]]>
+	</select>
+
+	<select id="getCategoryItemListRecent"
+		resultType="kr.or.ddit.vo.ItemVO">
+		<![CDATA[
+		    WITH CountedItems AS (
+		    SELECT item_name, COUNT(*) AS count
+		    FROM item
+		    GROUP BY item_name
+		),
+		MinPricedItems AS (
+		    SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+		    FROM item i
+		    JOIN CountedItems ci ON i.item_name = ci.item_name
+		    GROUP BY i.item_name
+		)
+		SELECT 
+		    i.item_id AS itemId,
+		    i.item_name AS itemName,
+		    i.item_model AS itemModel,
+		    i.item_make AS itemMake,
+		    i.item_m12 AS itemM12,
+		    i.item_m36 AS itemM36,
+		    i.item_m60 AS itemM60,
+		    i.item_attr AS itemAttr,
+		    i.item_as AS itemAs,
+		    i.cate_id AS cateId,
+		    i.item_date AS itemDate,
+		    ia.file_type AS fileType,
+		    ia.file_stre_nm AS streFileNm,
+		    ia.file_extsn AS fileExtsn
+		FROM item i
+		JOIN MinPricedItems mi ON i.item_name = mi.item_name AND i.item_m60 = mi.min_item_m60
+		JOIN item_atchfile ia ON i.item_id = ia.item_id
+		WHERE ia.file_type = 1 AND i.cate_id = #{cateId}
+		order by item_date desc
+		]]>
+	</select>
+
+	<select id="getCategoryItemListHigh"
+		resultType="kr.or.ddit.vo.ItemVO">
+		<![CDATA[
+		    WITH CountedItems AS (
+		    SELECT item_name, COUNT(*) AS count
+		    FROM item
+		    GROUP BY item_name
+		),
+		MinPricedItems AS (
+		    SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+		    FROM item i
+		    JOIN CountedItems ci ON i.item_name = ci.item_name
+		    GROUP BY i.item_name
+		)
+		SELECT 
+		    i.item_id AS itemId,
+		    i.item_name AS itemName,
+		    i.item_model AS itemModel,
+		    i.item_make AS itemMake,
+		    i.item_m12 AS itemM12,
+		    i.item_m36 AS itemM36,
+		    i.item_m60 AS itemM60,
+		    i.item_attr AS itemAttr,
+		    i.item_as AS itemAs,
+		    i.cate_id AS cateId,
+		    i.item_date AS itemDate,
+		    ia.file_type AS fileType,
+		    ia.file_stre_nm AS streFileNm,
+		    ia.file_extsn AS fileExtsn
+		FROM item i
+		JOIN MinPricedItems mi ON i.item_name = mi.item_name AND i.item_m60 = mi.min_item_m60
+		JOIN item_atchfile ia ON i.item_id = ia.item_id
+		WHERE ia.file_type = 1 AND i.cate_id = #{cateId}
+		order by item_m60 desc
+		]]>
+	</select>
+
+	<select id="getCategoryItemListLow"
+		resultType="kr.or.ddit.vo.ItemVO">
+		<![CDATA[
+		    WITH CountedItems AS (
+		    SELECT item_name, COUNT(*) AS count
+		    FROM item
+		    GROUP BY item_name
+		),
+		MinPricedItems AS (
+		    SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+		    FROM item i
+		    JOIN CountedItems ci ON i.item_name = ci.item_name
+		    GROUP BY i.item_name
+		)
+		SELECT 
+		    i.item_id AS itemId,
+		    i.item_name AS itemName,
+		    i.item_model AS itemModel,
+		    i.item_make AS itemMake,
+		    i.item_m12 AS itemM12,
+		    i.item_m36 AS itemM36,
+		    i.item_m60 AS itemM60,
+		    i.item_attr AS itemAttr,
+		    i.item_as AS itemAs,
+		    i.cate_id AS cateId,
+		    i.item_date AS itemDate,
+		    ia.file_type AS fileType,
+		    ia.file_stre_nm AS streFileNm,
+		    ia.file_extsn AS fileExtsn
+		FROM item i
+		JOIN MinPricedItems mi ON i.item_name = mi.item_name AND i.item_m60 = mi.min_item_m60
+		JOIN item_atchfile ia ON i.item_id = ia.item_id
+		WHERE ia.file_type = 1 AND i.cate_id = #{cateId}
+		order by item_m60
+		]]>
+	</select>
+	
+	<resultMap id="SearchResultMap" type="kr.or.ddit.vo.SearchVO">
+    <result property="comName" column="comName" />
+    <result property="itemName" column="itemName" />
+    <result property="itemModel" column="itemModel" />
+    <result property="itemMake" column="itemMake" />
+    <result property="cateId" column="cateId" />
+    <result property="itemId" column="itemId" />
+    <result property="itemDate" column="itemDate" />
+    <result property="itemM12" column="itemM12" />
+    <result property="itemM36" column="itemM36" />
+    <result property="itemM60" column="itemM60" />
+    <result property="itemAttr" column="itemAttr" />
+    <result property="itemAs" column="itemAs" />
+    <result property="streFileNm" column="streFileNm" />
+    <result property="fileExtsn" column="fileExtsn" />
+    <result property="fileType" column="fileType" />
+</resultMap>
+	
+
+	<select id="getSearchResult" parameterType="map" resultMap="SearchResultMap">
+		<![CDATA[
+			WITH CountedItems AS (
+			    SELECT item_name, COUNT(*) AS count
+			    FROM item
+			    GROUP BY item_name
+			),
+			MinPricedItems AS (
+			    SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+			    FROM item i
+			    JOIN CountedItems ci ON i.item_name = ci.item_name
+			    GROUP BY i.item_name
+			)
+			SELECT 
+			    c.com_name AS comName,
+			    i.item_name AS itemName,
+			    i.item_model AS itemModel,
+			    i.item_make AS itemMake,
+			    i.cate_id AS cateId,
+			    i.item_id AS itemId,
+			    i.item_date AS itemDate,
+			    i.item_m12 AS itemM12,
+			    i.item_m36 AS itemM36,
+			    i.item_m60 AS itemM60,
+			    i.item_attr AS itemAttr,
+			    i.item_as AS itemAs,
+			    i.cate_id AS cateId,
+			    ia.file_stre_nm AS streFileNm,
+			    ia.file_extsn AS fileExtsn,
+			    ia.file_type AS fileType
+			FROM item i
+			JOIN MinPricedItems mi ON i.item_name = mi.item_name AND i.item_m60 = mi.min_item_m60
+			JOIN item_atchfile ia ON i.item_id = ia.item_id
+			JOIN company c ON i.com_id = c.com_id
+			WHERE ia.file_type = 1 AND i.item_del = 'N'
+			AND (
+			    c.com_name LIKE '%' || #{searchWord} || '%'
+			    OR i.item_name LIKE '%' || #{searchWord} || '%'
+			    OR i.item_model LIKE '%' || #{searchWord} || '%'
+			    OR i.item_make LIKE '%' || #{searchWord} || '%'
+			    OR i.cate_id LIKE '%' || #{searchWord} || '%'
+			)
+		]]>
+	</select>
+
+	<select id="getSearchResultSortDate" parameterType="map" resultMap="SearchResultMap">
+		<![CDATA[
+			WITH CountedItems AS (
+			    SELECT item_name, COUNT(*) AS count
+			    FROM item
+			    GROUP BY item_name
+			),
+			MinPricedItems AS (
+			    SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+			    FROM item i
+			    JOIN CountedItems ci ON i.item_name = ci.item_name
+			    GROUP BY i.item_name
+			)
+			SELECT 
+			    c.com_name AS comName,
+			    i.item_name AS itemName,
+			    i.item_model AS itemModel,
+			    i.item_make AS itemMake,
+			    i.cate_id AS cateId,
+			    i.item_id AS itemId,
+			    i.item_date AS itemDate,
+			    i.item_m12 AS itemM12,
+			    i.item_m36 AS itemM36,
+			    i.item_m60 AS itemM60,
+			    i.item_attr AS itemAttr,
+			    i.item_as AS itemAs,
+			    i.cate_id AS cateId,
+			    ia.file_stre_nm AS streFileNm,
+			    ia.file_extsn AS fileExtsn,
+			    ia.file_type AS fileType
+			FROM item i
+			JOIN MinPricedItems mi ON i.item_name = mi.item_name AND i.item_m60 = mi.min_item_m60
+			JOIN item_atchfile ia ON i.item_id = ia.item_id
+			JOIN company c ON i.com_id = c.com_id
+			WHERE ia.file_type = 1 AND i.item_del = 'N'
+			AND (
+			    c.com_name LIKE '%' || #{searchWord} || '%'
+			    OR i.item_name LIKE '%' || #{searchWord} || '%'
+			    OR i.item_model LIKE '%' || #{searchWord} || '%'
+			    OR i.item_make LIKE '%' || #{searchWord} || '%'
+			    OR i.cate_id LIKE '%' || #{searchWord} || '%'
+			)
+			order by item_date desc
+			
+		]]>
+	</select>
+
+	<select id="getSearchResultSortHigh" parameterType="map" resultMap="SearchResultMap">
+		<![CDATA[
+			WITH CountedItems AS (
+			    SELECT item_name, COUNT(*) AS count
+			    FROM item
+			    GROUP BY item_name
+			),
+			MinPricedItems AS (
+			    SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+			    FROM item i
+			    JOIN CountedItems ci ON i.item_name = ci.item_name
+			    GROUP BY i.item_name
+			)
+			SELECT 
+			    c.com_name AS comName,
+			    i.item_name AS itemName,
+			    i.item_model AS itemModel,
+			    i.item_make AS itemMake,
+			    i.cate_id AS cateId,
+			    i.item_id AS itemId,
+			    i.item_date AS itemDate,
+			    i.item_m12 AS itemM12,
+			    i.item_m36 AS itemM36,
+			    i.item_m60 AS itemM60,
+			    i.item_attr AS itemAttr,
+			    i.item_as AS itemAs,
+			    i.cate_id AS cateId,
+			    ia.file_stre_nm AS streFileNm,
+			    ia.file_extsn AS fileExtsn,
+			    ia.file_type AS fileType
+			FROM item i
+			JOIN MinPricedItems mi ON i.item_name = mi.item_name AND i.item_m60 = mi.min_item_m60
+			JOIN item_atchfile ia ON i.item_id = ia.item_id
+			JOIN company c ON i.com_id = c.com_id
+			WHERE ia.file_type = 1 AND i.item_del = 'N'
+			AND (
+			    c.com_name LIKE '%' || #{searchWord} || '%'
+			    OR i.item_name LIKE '%' || #{searchWord} || '%'
+			    OR i.item_model LIKE '%' || #{searchWord} || '%'
+			    OR i.item_make LIKE '%' || #{searchWord} || '%'
+			    OR i.cate_id LIKE '%' || #{searchWord} || '%'
+			)
+			order by item_m60 desc
+			
+		]]>
+	</select>
+
+	<select id="getSearchResultSortLow" parameterType="map" resultMap="SearchResultMap">
+		<![CDATA[
+			WITH CountedItems AS (
+			    SELECT item_name, COUNT(*) AS count
+			    FROM item
+			    GROUP BY item_name
+			),
+			MinPricedItems AS (
+			    SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+			    FROM item i
+			    JOIN CountedItems ci ON i.item_name = ci.item_name
+			    GROUP BY i.item_name
+			)
+			SELECT 
+			    c.com_name AS comName,
+			    i.item_name AS itemName,
+			    i.item_model AS itemModel,
+			    i.item_make AS itemMake,
+			    i.cate_id AS cateId,
+			    i.item_id AS itemId,
+			    i.item_date AS itemDate,
+			    i.item_m12 AS itemM12,
+			    i.item_m36 AS itemM36,
+			    i.item_m60 AS itemM60,
+			    i.item_attr AS itemAttr,
+			    i.item_as AS itemAs,
+			    i.cate_id AS cateId,
+			    ia.file_stre_nm AS streFileNm,
+			    ia.file_extsn AS fileExtsn,
+			    ia.file_type AS fileType
+			FROM item i
+			JOIN MinPricedItems mi ON i.item_name = mi.item_name AND i.item_m60 = mi.min_item_m60
+			JOIN item_atchfile ia ON i.item_id = ia.item_id
+			JOIN company c ON i.com_id = c.com_id
+			WHERE ia.file_type = 1 AND i.item_del = 'N'
+			AND (
+			    c.com_name LIKE '%' || #{searchWord} || '%'
+			    OR i.item_name LIKE '%' || #{searchWord} || '%'
+			    OR i.item_model LIKE '%' || #{searchWord} || '%'
+			    OR i.item_make LIKE '%' || #{searchWord} || '%'
+			    OR i.cate_id LIKE '%' || #{searchWord} || '%'
+			)
+			order by item_m60
+			
+		]]>
+	</select>
+
+	<select id="getSearchResultCnt" resultType="Integer">
+		<![CDATA[
+			WITH CountedItems AS (
+			    SELECT item_name, COUNT(*) AS count
+			    FROM item
+			    GROUP BY item_name
+			),
+			MinPricedItems AS (
+			    SELECT i.item_name, MIN(i.item_m60) AS min_item_m60
+			    FROM item i
+			    JOIN CountedItems ci ON i.item_name = ci.item_name
+			    GROUP BY i.item_name
+			)
+			SELECT 
+			    COUNT(*) AS cnt
+			FROM item i
+			JOIN MinPricedItems mi ON i.item_name = mi.item_name AND i.item_m60 = mi.min_item_m60
+			JOIN item_atchfile ia ON i.item_id = ia.item_id
+			JOIN company c ON i.com_id = c.com_id
+			WHERE ia.file_type = 1 
+			AND i.item_del = 'N'
+			AND (
+			    c.com_name LIKE '%' || #{searchWord} || '%'
+			    OR i.item_name LIKE '%' || #{searchWord} || '%'
+			    OR i.item_model LIKE '%' || #{searchWord} || '%'
+			    OR i.item_make LIKE '%' || #{searchWord} || '%'
+			    OR i.cate_id LIKE '%' || #{searchWord} || '%'
+			)
+		]]>
+	</select>
+	
+
+
+</mapper>

@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+<style>
+#cartListCss {
+  margin-bottom: 20px;
+}
+#cartImage {
+   width: 150px;
+   height: 150px;
+}
+.cart-table {
+   width: 500px;
+   height: 150px;
+  }
+.cart-table td:first-child {
+  width: 50px;
+}
+.cart-table td:last-child {
+  text-align: center;
+  width: 50px;
+}
+</style>

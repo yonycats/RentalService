@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="category">
+
+	<select id="allListCategory" resultType="kr.or.ddit.vo.CategoryVO">
+		select cate_id cateId
+		from category
+	</select>
+
+	<insert id="insertCategory" parameterType="kr.or.ddit.vo.CategoryVO">
+		insert into category (cate_id)
+		values(#{catdId})
+	</insert>
+	
+	<update id="deleteCategory">
+		delete from category
+		where cate_id = #{catdId}
+	</update>
+
+</mapper>

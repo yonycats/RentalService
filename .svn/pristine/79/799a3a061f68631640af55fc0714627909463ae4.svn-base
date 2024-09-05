@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="order">
+
+	<!-- order -->
+	<select id="userSelect" resultType="kr.or.ddit.vo.UserVO">
+
+		SELECT U.user_No userNo, U.user_Name userName, U.user_Email userEmail, U.user_Tel userTel, 
+			   U.user_Addr userAddr, U.user_Addr_Detail userAddrDetail, U.USER_ZIP userZip
+		FROM USERS U
+		WHERE U.USER_NO = #{userNo}
+	
+	</select>
+
+
+	<select id="itemSelect" resultType="kr.or.ddit.vo.ItemVO">
+
+		SELECT I.item_Id itemId, I.item_Name itemName, I.item_M12 itemM12, I.item_M36 itemM36, I.item_M60 itemM60,
+		        A.FILE_TYPE fileType, A.FILE_STRE_NM streFileNm, A.FILE_EXTSN fileExtsn
+		FROM ITEM I, ITEM_ATCHFILE A
+		WHERE I.ITEM_ID = #{itemId}
+		      AND A.ITEM_ID = I.ITEM_ID
+		      AND A.FILE_TYPE = '1'
+	
+	</select>
+	
+	
+	<select id="userCardSelectList" resultType="kr.or.ddit.vo.CardVO">
+
+		SELECT U.user_No userNo, C.card_Id cardId, C.card_Com cardCom, C.card_No cardNo, C.card_Disc cardDisc
+		FROM USERS U, CARD C
+		WHERE U.USER_NO = C.USER_NO
+		      AND U.USER_NO = #{userNo}
+	
+	</select>
+
+
+
+
+
+
+	<!-- payment -->	
+	<select id="orderIdSelect" resultType="kr.or.ddit.vo.OrderVO">
+
+		SELECT ORD_ID ordId
+		FROM (SELECT * FROM ORDERS WHERE USER_NO=#{userNo} ORDER BY ORDER_DATE DESC)
+		      WHERE ROWNUM=1
+	
+	</select>
+
+	<insert id="orderInsert" parameterType="kr.or.ddit.vo.PaymentVO">
+		
+		INSERT INTO ORDERS (ORD_ID, USER_NO, ORDER_DATE, ORDER_TOTAL_AMOUNT)
+		VALUES ( (SELECT 'ORD' || TO_CHAR(TO_NUMBER(SUBSTR(ORD_ID, 4)) + 1, 'FM0000') ORD_ID
+		            FROM (SELECT ORD_ID FROM
+		                 (SELECT * FROM ORDERS ORDER BY ORDER_DATE DESC)
+		                  WHERE ROWNUM=1)), 
+		        #{userNo}, SYSDATE, #{orderTotalAmount} )
+		        
+	</insert>
+	
+	<insert id="orderDetailInsert" parameterType="kr.or.ddit.vo.PaymentVO">
+		
+		INSERT INTO ORDER_DETAIL (ORD_ID, ITEM_ID, OD_CNT, OD_STATUS, OD_AMOUNT, PAY_CARD_ID)
+		VALUES ( #{ordId}, #{itemId}, 1, '렌탈중', #{odAmount}, #{payCardId} )
+		        
+	</insert>
+	
+	<insert id="paymentInsert" parameterType="kr.or.ddit.vo.PaymentVO">
+		
+		INSERT INTO PAYMENT (ORD_ID, PAY_CARD_ID, PAY_DATE, PAY_AMOUNT)
+		VALUES ( #{ordId}, #{payCardId}, SYSDATE, #{orderTotalAmount})
+		        
+	</insert>
+	
+	<insert id="rentalInsert12" parameterType="kr.or.ddit.vo.PaymentVO">
+		
+		INSERT INTO RENTAL (RENT_ID, ITEM_ID, USER_NO, RENT_STA, RENT_END, RENT_PRICE, ORD_ID)   
+		VALUES ( ( SELECT 'RENT' || TO_CHAR(TO_NUMBER(SUBSTR(RENT_ID, 5)) + 1, 'FM0000') RENT_ID
+		            FROM (SELECT RENT_ID FROM
+		            (SELECT * FROM RENTAL ORDER BY RENT_STA DESC)
+		            WHERE ROWNUM=1) ),
+		        #{itemId}, #{userNo}, SYSDATE, (TO_CHAR(ADD_MONTHS(SYSDATE, 12))), #{odAmount}, #{ordId} )
+		        
+	</insert>
+
+	<insert id="rentalInsert36" parameterType="kr.or.ddit.vo.PaymentVO">
+		
+		INSERT INTO RENTAL (RENT_ID, ITEM_ID, USER_NO, RENT_STA, RENT_END, RENT_PRICE, ORD_ID)   
+		VALUES ( ( SELECT 'RENT' || TO_CHAR(TO_NUMBER(SUBSTR(RENT_ID, 5)) + 1, 'FM0000') RENT_ID
+		            FROM (SELECT RENT_ID FROM
+		            (SELECT * FROM RENTAL ORDER BY RENT_STA DESC)
+		            WHERE ROWNUM=1) ),
+		        #{itemId}, #{userNo}, SYSDATE, (TO_CHAR(ADD_MONTHS(SYSDATE, 36))), #{odAmount}, #{ordId} )
+		        
+	</insert>
+	
+	<insert id="rentalInsert60" parameterType="kr.or.ddit.vo.PaymentVO">
+		
+		INSERT INTO RENTAL (RENT_ID, ITEM_ID, USER_NO, RENT_STA, RENT_END, RENT_PRICE, ORD_ID)   
+		VALUES ( ( SELECT 'RENT' || TO_CHAR(TO_NUMBER(SUBSTR(RENT_ID, 5)) + 1, 'FM0000') RENT_ID
+		            FROM (SELECT RENT_ID FROM
+		            (SELECT * FROM RENTAL ORDER BY RENT_STA DESC)
+		            WHERE ROWNUM=1) ),
+		        #{itemId}, #{userNo}, SYSDATE, (TO_CHAR(ADD_MONTHS(SYSDATE, 60))), #{odAmount}, #{ordId} )
+
+		        
+	</insert>
+ 	
+</mapper>

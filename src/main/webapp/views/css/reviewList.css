@@ -1,0 +1,37 @@
+@charset "UTF-8";
+
+.table-reviews {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: auto;
+}
+
+.table-reviews th {
+	height: 50px; /* 원하는 높이로 설정 */
+	line-height: 50px; /* 행간 높이를 동일하게 설정 */
+	vertical-align: middle;
+	overflow: hidden; /* 내용이 셀을 넘치면 숨기기 */
+	text-overflow: ellipsis; /* 넘치는 내용은 ... 으로 표시 */
+	white-space: nowrap; /* 내용을 한 줄로 표시 */
+	padding-top: 15px;
+	padding-bottom: 15px; /* 소제목 <th> 높이 조절 */
+}
+
+ #table-content td {
+	height: 50px; /* 원하는 높이로 설정 */
+	overflow: hidden; /* 내용이 셀을 넘치면 숨기기 */
+	text-overflow: ellipsis; /* 넘치는 내용은 .. 으로 표시 */
+	line-height: 50px; /* 행간 높이를 동일하게 설정 */
+	vertical-align: middle;
+	white-space: nowrap; /* 내용을 한 줄로 표시 */
+}
+
+#table-content tr {
+	height: 30px; /* 원하는 높이로 설정 */
+	line-height: 500px; /* 행간 높이를 동일하게 설정 */
+	vertical-align: middle;
+	overflow: hidden; /* 내용이 셀을 넘치면 숨기기 */
+	text-overflow: ellipsis; /* 넘치는 내용은 ... 으로 표시 */
+	white-space: nowrap; /* 내용을 한 줄로 표시 */
+}

@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+
+   <insert id="insertUser" parameterType="kr.or.ddit.vo.UserVO">
+      insert into USERS(
+      user_no,
+      user_id,
+      user_pass,
+      user_name,
+      user_email,
+      user_tel,
+      user_qut,
+      user_ans,
+      user_addr,
+      user_addr_detail,
+      user_zip) values (
+      (select
+      nvl(max(user_no),0)+1 from users),
+      #{userId},
+      #{userPass},
+      #{userName},
+      #{userEmail},
+      #{userTel},
+      #{userQut},
+      #{userAns},
+      #{userAddr},
+      #{userAddrDetail},
+      #{userZip})
+   </insert>
+
+   <insert id="insertCom" parameterType="kr.or.ddit.vo.CompanyVO">
+      insert into COMPANY(
+      com_id,
+      com_pass,
+      com_name,
+      com_ceo,
+      com_no,
+      com_zip,
+      com_addr,
+      com_addr_detail,
+      com_tel,
+      com_email,
+      com_resname,
+      com_restel
+      ) values (
+      #{comId},
+      #{comPass},
+      #{comName},
+      #{comCeo},
+      #{comNo},
+      #{comZip},
+      #{comAddr},
+      #{comAddrDetail},
+      #{comTel},
+      #{comEmail},
+      #{comResname},
+      #{comRestel}
+      )
+   </insert>
+
+   <update id="updateUser" parameterType="kr.or.ddit.vo.UserVO">
+		update users set
+		user_id = #{userId}, user_pass = #{userPass}, user_name = #{userName}, user_tel = #{userTel},
+		user_email = #{userEmail}, user_zip = #{userZip}, user_addr = #{userAddr}, user_addr_Detail = #{userAddrDetail}
+		where user_id = #{userId} 
+   </update>
+
+   <update id="updateCom" parameterType="kr.or.ddit.vo.CompanyVO">
+      update company set
+      com_id=
+      #{comId},
+      com_pass= #{comPass},
+      com_name= #{comName},
+      com_ceo= #{comCeo},
+      com_no= #{comNo},
+      com_addr=
+      #{comAddr},
+      com_addr_detail=
+      #{comAddrDetail},
+      com_zip= #{comZip},
+      com_tel= #{comTel},
+      com_email=
+      #{comEmail},
+      com_resname= #{comResname},
+      com_restel= #{comRestel},
+      com_signout= #{comSignout},
+      com_auth=
+      #{comAuth}
+   </update>
+
+   <delete id="deleteUser" parameterType="String">
+      update users
+      set user_signout = 'Y'
+      where user_id = #{userId}
+   </delete>
+
+   <delete id="deleteCom" parameterType="String">
+      delete from company
+      where
+      com_id= #{comId}
+   </delete>
+
+   <select id="getAllUser" resultType="kr.or.ddit.vo.UserVO">
+      select
+      user_no userNo,
+      user_id
+      userId,
+      user_pass userPass,
+      user_name userName,
+      user_email userEmail,
+      user_tel userTel,
+      user_qut userQut,
+      user_ans
+      userAns,
+      user_ban userBan,
+      user_signout userSignout,
+      user_addr userAddr,
+      user_addr_detail
+      userAddrDetail,
+      user_zip userZip,
+      user_ck_id userCkId,
+      user_ck_date
+      userCkDate
+      from users
+   </select>
+
+   <select id="getAllCom" resultType="kr.or.ddit.vo.CompanyVO">
+      select
+      com_id comId,
+      com_pass
+      comPass,
+      com_name comName,
+      com_ceo comCeo,
+      com_no comNo,
+      com_addr comAddr,
+      com_addr_detail comAddrDetail,
+      com_zip comZip,
+      com_tel comTel,
+      com_email
+      comEmail,
+      com_resname comResname,
+      com_restel comRestel,
+      com_signout
+      comSignout,
+      com_auth comAuth
+      from company
+   </select>
+
+   <select id="getUser" resultType="kr.or.ddit.vo.UserVO">
+      select
+      USER_NO userNo,
+      USER_ID
+      userId,
+      USER_PASS userPass,
+      USER_NAME userName,
+      USER_EMAIL userEmail,
+      USER_TEL userTel,
+      USER_QUT userQut,
+      USER_ANS userAns,
+      USER_BAN userBan,
+      USER_SIGNOUT userSignout,
+      USER_ADDR userAddr,
+      USER_ADDR_DETAIL
+      userAddrDetail,
+      USER_ZIP userZip,
+      USER_CK_ID userCkId,
+      USER_CK_DATE
+      userCkDate
+      from users
+      where user_id = #{userId} and user_signout = 'N'
+   </select>
+
+   <select id="getCom" resultType="kr.or.ddit.vo.CompanyVO">
+      select
+      COM_ID comId,
+      COM_PASS
+      comPass,
+      COM_NAME comName,
+      COM_CEO comCeo,
+      COM_NO comNo,
+      COM_ADDR comAddr,
+      COM_ADDR_DETAIL comAddrDetail,
+      COM_ZIP comZip,
+      COM_TEL comTel,
+      COM_EMAIL
+      comEmail,
+      COM_RESNAME comResname,
+      COM_RESTEL comRestel,
+      COM_SIGNOUT
+      comSignout,
+      COM_AUTH comAuth
+      FROM COMPANY
+      where com_id = #{comId} and com_signout = 'N'
+   </select>
+
+   <select id="getAd" resultType="kr.or.ddit.vo.AdminVO">
+      select
+      ADMIN_ID adminId,
+      ADMIN_PASS
+      adminPass,
+      ADMIN_NAME adminName,
+      ADMIN_TEL adminTel,
+      ADMIN_EMAIL
+      adminEmail
+      FROM ADMIN
+      where admin_id = #{adminId}
+   </select>
+
+   <select id="searchUser" resultType="kr.or.ddit.vo.UserVO">
+      select
+      user_no userNo,
+      user_id userId,
+      user_pass userPass,
+      user_name
+      userName,
+      user_email userEmail,
+      user_tel userTel,
+      user_qut userQut,
+      user_ans
+      userAns,
+      user_ban userBan,
+      user_signout userSignout,
+      user_addr
+      userAddr,
+      user_addr_detail userAddrDetail,
+      user_zip userZip,
+      user_ck_id
+      userCkId,
+      user_ck_date userCkDate
+      from users
+      <where>
+         <if test='userId != null and userId != ""'> and user_id = #{userId} </if>
+         <if test='userName != null and userName != ""'> and user_name = #{userName} </if>
+      </where>
+   </select>
+
+   <select id="searchCom" resultType="kr.or.ddit.vo.CompanyVO">
+      select
+      com_id comId,
+      com_pass
+      comPass,
+      com_name comName,
+      com_ceo comCeo,
+      com_no comNo,
+      com_addr comAddr,
+      com_addr_detail comAddrDetail,
+      com_zip
+      comZip,
+      com_tel comTel,
+      com_email
+      comEmail,
+      com_resname comResname,
+      com_restel comRestel,
+      com_signout
+      comSignout,
+      com_auth comAuth
+      from
+      company
+      <where>
+         <if test='comId != null and comId != ""'> and com_id = #{comId} </if>
+         <if test='comName != null and comName != ""'> and com_name = #{comName} </if>
+      </where>
+   </select>
+
+   <select id="checkUser" resultType="int">
+      select count(*) cnt from
+      users
+      where user_id = #{userId} and user_signout = 'N'
+   </select>
+
+   <select id="checkCom" resultType="int">
+      select count(*) cnt from
+      company
+      where com_id = #{comId} and user_signout = 'N'
+   </select>
+
+   <select id="findIdUser" resultType="String">
+      select user_id from users
+      where user_email = #{userEmail}
+   </select>
+
+   <select id="findIdCom" resultType="String">
+      select user_id from company
+      where com_email = #{comEmail}
+   </select>
+
+   <update id="findPassUser" parameterType="kr.or.ddit.vo.UserVO">
+      update users set
+      user_pass = #{userPass}
+      where
+      user_email = #{userEmail} and user_name = #{userName} and user_id = #{userId}
+   </update>
+
+<!--    <update id="findPassCom" parameterType="kr.or.ddit.vo.CompanyVO"> -->
+<!--       update company set -->
+<!--       com_pass = #{comPass} -->
+<!--       where -->
+<!--       com_email = #{comEmail} and com_name = #{comName} and com_id = #{comId} -->
+<!--    </update> -->
+
+   <select id="checkUserLogin" resultType="int">
+      select count(*) cnt from
+      users
+      where user_id = #{userId} and user_pass = #{userPass} and user_signout = 'N'
+   </select>
+
+   <select id="checkComLogin" resultType="int">
+      select count(*) cnt from
+      company
+      where com_id = #{comId} and com_pass = #{comPass} and com_signout = 'N'
+   </select>
+   
+   <select id="userLoginCheck" resultType="int">
+      select count(*) cnt
+      from users
+      where user_id = #{userId} and user_signout = 'N'
+   </select>
+   
+   <select id="comLoginCheck" resultType="int">
+      select count(*) cnt
+      from company
+      where com_id = #{comId} and com_signout = 'N'
+   </select>
+
+
+</mapper>

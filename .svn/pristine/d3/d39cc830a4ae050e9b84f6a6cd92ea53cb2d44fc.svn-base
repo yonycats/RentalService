@@ -1,0 +1,878 @@
+@charset "UTF-8";
+
+* {
+	font-family: "Noto Sans KR", sans-serif;
+}
+
+#logo1 {
+	margin-left: 3%;
+	margin-top: 35px;
+}
+
+#logo2 img {
+	width: 130px;
+	height: 130px;
+}
+
+.navbar {
+	margin-bottom: 0;
+	border-radius: 0;
+}
+
+.carousel-inner img {
+	width: 100%;
+	margin: auto;
+	min-height: 200px;
+}
+
+@media ( max-width : 600px) {
+	.carousel-caption {
+		display: none;
+	}
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+
+#header-category {
+	margin: 10px 0 15px 0;
+	display: flex;
+	list-style: none;
+	justify-content: center;
+	font-size: 20px;
+}
+
+#header-category li {
+	color: black;
+	padding: 8px 12px;
+}
+
+#header-category li::after {
+	content: "|";
+	padding-left: 24px;
+}
+
+#header-category li:last-child:after {
+	content: "";
+}
+
+.item img {
+	height: 300px;
+}
+
+#main-search {
+	margin: 20px;
+	width: 250px;
+	height: 40px;
+}
+
+body {
+	overflow-y: auto;
+}
+
+.search-box {
+	background: white;
+	border-radius: 40px;
+	padding-left: 10px;
+	border: 1px solid black;
+}
+
+.search-txt {
+	width: 200px;
+	border: none;
+	background: none;
+	outline: none;
+	float: left;
+	padding-top: 14px;
+	color: black;
+	font-size: 18px;
+	line-height: 30px;
+}
+
+.search-btn {
+	color: black;
+	float: right;
+	margin-right: 10px;
+	width: 40px;
+	height: 100%;
+	border-radius: 50%;
+	background: white;
+	border: none;
+	font-size: 18px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.search-box-container {
+	display: flex;
+	justify-content: center;
+}
+
+.product-item .rental {
+	margin-inline-start: 20px;
+}
+
+.product-item .rental-fee {
+	margin: 0px;
+	float: left;
+	font-size: 17px;
+	font-weight: 500;
+}
+
+.product-item .rental-amount {
+	margin: 0px;
+	float: right;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.product-item .rental-amount-won {
+	margin: 0px;
+	font-size: 16px;
+	font-weight: 400;
+	margin-left: 2px;
+}
+
+.product-item .modelName {
+	color: gray;
+	text-align: start;
+	padding-top: 3px;
+	margin-bottom: 0;
+	font-size: 14px;
+	margin-inline-start: 20px;
+}
+
+.product-item .productName {
+	text-align: start;
+	margin-bottom: 10px;
+	font-size: 17px;
+	font-weight: 400;
+	margin-inline-start: 20px;
+}
+
+.product-item img {
+	height: 100% px;
+	width: 100% px;
+	object-fit: cover;
+	margin-bottom: 10px;
+}
+
+.product-item {
+	border-radius: 20px;
+	border: 1px solid #ccc;
+	transition: border-color 0.5s ease;
+	margin-bottom: 10px;
+	text-align: center;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 300px;
+	height: 400px;
+}
+
+.product-item:hover {
+	border: 1px solid black;
+}
+
+.fixed-widget {
+	position: fixed;
+	top: 500px;
+	right: 20px;
+	width: 60px;
+	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	z-index: 1300;
+}
+
+.fixed-widget a {
+	width: 60px;
+	height: 60px;
+	border-radius: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: white;
+	text-align: center;
+	font-size: 15px;
+	font-weight: 500;
+}
+
+header {
+	position: fixed;
+	width: 100%;
+	z-index: 1000;
+	background-color: white;
+	top: 0px;
+}
+
+.fixed-header {
+	/* 	margin-top: 70px; */
+	
+}
+
+.fixed-widget img {
+	width: 60px;
+	height: 60px;
+	border-radius: 30px;
+	border: 1px solid black;
+}
+
+.navbar-nav>.separator {
+	display: flex;
+	align-items: center;
+	padding-left: 10px;
+	padding-right: 10px;
+	color: black;
+	height: 50px;
+	pointer-events: none;
+}
+
+#wrap {
+	min-height: 100vh;
+	position: relative;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+footer {
+	background-color: #232323;
+	width: 100%;
+	height: 220px;
+	bottom: 0px;
+	color: #dddddd;
+	margin-top: auto;
+}
+
+.footer-info {
+	float: left;
+}
+
+#footer-category {
+	display: flex;
+	list-style: none;
+	justify-content: start;
+	font-size: 15px;
+	font-weight: 400;
+}
+
+#footer-category a {
+	color: white;
+}
+
+#footer-category li {
+	color: #dddddd;
+	padding: 8px 12px;
+}
+
+#footer-category li::after {
+	content: "|";
+	padding-left: 24px;
+}
+
+#footer-category li:last-child:after {
+	content: "";
+}
+
+#footer-info {
+	display: flex;
+	list-style: none;
+	flex-direction: column;
+	padding: 10px 0px 0px 60px;
+}
+
+#footer-info li {
+	margin-bottom: 5px;
+}
+
+.search-contianer {
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+* {
+	font-family: "Noto Sans KR", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: weight;
+	font-style: normal;
+}
+
+.mypage-main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: 30px;
+}
+
+.mypage-main-top {
+	width: 100%;
+}
+
+.mypage-main-top-nav {
+	text-align: right;
+}
+
+.mypage-main-top-title {
+	text-align: center;
+}
+
+.mypage-main-middle {
+	margin: 0 0 60px;
+	display: block;
+	width: 100%;
+}
+
+#mypage-main-update {
+	margin: 5px 0;
+	display: block;
+	height: 50px;
+}
+
+#mypage-main-update ul {
+	float: right;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-size: 13px;
+	font-weight: 400;
+}
+
+#mypage-main-update li {
+	float: left;
+	margin: 0 0 0 4px;
+}
+
+table {
+	font-size: 13px;
+	font-weight: 400;
+	border-collapse: collapse;
+	border-spacing: 0;
+	color: #454545;
+}
+
+#mypage-main-info {
+	width: 100%;
+	border-top: 1px solid #c0c0c0;
+}
+
+tbody {
+	display: table-row-group;
+	vertical-align: middle;
+	border-color: inherit;
+}
+
+tr {
+	display: table-row;
+}
+
+#mypage-main-info th {
+	width: 15%;
+	padding: 15px 20px;
+	background-color: #f8f8f8;
+	font-weight: 500;
+	font-size: 15px;
+	border-bottom: 1px solid #e2e2e2;
+	text-align: left;
+}
+
+table th {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	line-height: 1.3em;
+}
+
+#mypage-main-info td {
+	width: 35%;
+	padding: 15px 20px;
+	color: #666;
+	word-break: break-all;
+	font-size: 15px;
+	border-bottom: 1px solid #e2e2e2;
+	text-align: left;
+}
+
+.update-button {
+	background-color: #333;
+	border: 1px solid #333;
+	color: #fff;
+	padding: 10px 12px;
+	font-size: 14px;
+	display: inline-block;
+	text-align: center;
+}
+
+.update-button:hover {
+	color: white;
+	text-decoration: none;
+}
+
+.cont-inner {
+	width: 1200px;
+	min-height: 520px;
+	padding: 40px 0 80px;
+	margin: 0 auto;
+}
+
+#mb-confirm {
+	margin: 0 auto;
+	padding: 120px 0 150px;
+	width: 600px;
+}
+
+#mb-confirm h1 {
+	margin: 0 0 12px;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.tac {
+	text-align: center;
+}
+
+#mb-confirm p {
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-bottom: 0;
+	background-color: #fff;
+	display: block;
+}
+
+#mb-confirm p strong {
+	display: block;
+	padding-bottom: 4px;
+}
+
+strong {
+	font-weight: 600;
+}
+
+form {
+	display: block;
+}
+
+#mb-confirm fieldset {
+	margin: 0 0 20px;
+	padding: 30px 0;
+	border: 1px solid #ddd;
+	background-color: #f9f9f9;
+	text-align: center;
+	display: block;
+}
+
+#mb-confirm-id {
+	display: inline-block;
+	margin: 0 30px 0 7px;
+	font-weight: 600;
+}
+
+#mb-confirm label {
+	margin: 0 7px 0 0;
+	vertical-align: middle;
+	cursor: default;
+}
+
+#mb-confirm fieldset .frm-input {
+	background-color: #fff;
+}
+
+.frm-input {
+	padding: 0 10px;
+	font-weight: normal;
+	border: 1px solid #e1e1e1;
+	height: 30px;
+}
+
+.btn-lsmall {
+	background-color: #333;
+	border: 1px solid #333;
+	color: #fff;
+	padding: 10px 12px;
+	font-size: 14px;
+	font-weight: normal;
+	text-align: center;
+}
+
+p {
+	margin: 0;
+}
+
+.btn-confirm {
+	margin-top: 50px;
+	text-align: center;
+	font-size: 13px;
+	font-weight: 400;
+}
+
+.btn-confirm a {
+	margin: 0 1.5px;
+}
+
+.grey {
+	background-color: #888;
+	border: 1px solid #888;
+	color: #fff;
+}
+
+.btn-medium {
+	padding: 12px 20px;
+	font-size: 15px;
+	font-weight: normal;
+	width: 150px;
+	height: 40px;
+}
+
+.cont_inner {
+	width: 1200px;
+	min-height: 520px;
+	padding: 40px 0 80px;
+	margin: 0 auto;
+}
+
+.stit {
+	font-size: 27px;
+	font-weight: 600;
+	color: #222;
+	margin: 50px 0;
+	text-align: center;
+	position: relative;
+}
+
+.login_wrap {
+	width: 450px;
+	margin: 0 auto;
+	background-color: #fff;
+	text-align: center;
+	overflow: hidden;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.log_inner dd {
+	margin-bottom: 7px;
+	text-align: center;
+}
+
+.sound_only {
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0 !important;
+	padding: 0 !important;
+	width: 1px !important;
+	height: 1px !important;
+	font-size: 0 !important;
+	line-height: 0 !important;
+	overflow: hidden;
+}
+
+label {
+	cursor: default;
+}
+
+.log_inner dd {
+	margin-bottom: 7px;
+	text-align: center;
+}
+
+.log_inner input[type=text], .log_inner input[type=password] {
+	width: 100%;
+	height: 55px;
+	padding: 0 30px;
+	line-height: 55px;
+	font-size: 15px;
+	border: 1px solid #e1e1e1;
+}
+
+.log_inner .log_op {
+	font-size: 13px;
+	color: #888;
+	line-height: 1em;
+	margin: 20px auto;
+	text-align: left;
+}
+
+input[type=checkbox] {
+	margin-bottom: 1px;
+}
+
+.log_inner dd button, .log_inner dd a {
+	width: 100%;
+}
+
+#sign {
+	background: #0e2f3c;
+	border-color: #0e2f3c;
+	color: white;
+}
+
+.btn_large {
+	font-weight: 500;
+}
+
+.btn_large {
+	padding: 15px 25px;
+	font-size: 17px;
+	font-weight: 600;
+}
+
+.btn-group {
+	width: 450px;
+	height: 40px;
+	display: flex;
+}
+
+.btn-group .login-btn {
+	width: 50%;
+	height: 100%;
+	border-radius: 5px;
+}
+
+.login-btn btn-primary {
+	background-color: #3279B7;
+	color: white;
+}
+
+.login-btn btn-secondary {
+	background-color: #efefef;
+	color: black;
+}
+
+.btn-primary:focus {
+	outline: none !important;
+}
+
+.btn-secondary:focus {
+	outline: none !important;
+}
+
+.aside-cs {
+	position: relative; /* 드롭다운 메뉴의 위치를 조정하기 위해 상대 위치로 설정 */
+}
+
+.menu-item {
+	display: flex;
+	align-items: center; /* 세로 중앙 정렬 */
+	position: relative; /* 하위 메뉴의 위치를 조정하기 위해 상대 위치로 설정 */
+}
+
+.menu-item a {
+	margin-right: 10px; /* 링크 간격 설정 */
+}
+
+.submenu {
+	display: none;
+	position: absolute;
+	left: 100%; /* 부모 요소의 오른쪽에 배치 */
+	top: 0;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	padding: 10px;
+	z-index: 100;
+	min-width: 150px; /* 하위 메뉴의 최소 너비 설정 */
+}
+
+.menu-item:hover .submenu {
+	display: block;
+}
+
+.submenu li {
+	padding: 5px 0; /* 하위 메뉴 항목 간격 설정 */
+}
+
+.itemInquiry {
+	width: 100%;
+	text-align: center;
+}
+
+.itemInquiry tr {
+	text-align: center;
+}
+
+.itemInquiry tr .title {
+	width: 15%;
+}
+
+.itemInquiry tr .content {
+	width: 30%;
+}
+
+.itemInquiry tr .content-date {
+	width: 15%;
+}
+
+.itemInquiry tr .content-detail {
+	width: 15%;
+}
+
+.review {
+	width: 100%;
+	text-align: center;
+}
+
+.review tr {
+	text-align: center;
+}
+
+.review tr .star {
+	width: 10%;
+}
+
+.review tr .title {
+	width: 30%
+}
+
+.review tr .content {
+	width: 30%
+}
+
+.review tr .content-date {
+	width: 15%
+}
+
+.review tr .content-detail {
+	width: 15%
+}
+
+.cont-inner {
+	width: 1200px;
+	min-height: 520px;
+	padding: 40px 0 80px;
+	margin: 0 auto;
+}
+
+#mb-confirm {
+	margin: 0 auto;
+	padding: 120px 0 150px;
+	width: 600px;
+}
+
+#mb-confirm h1 {
+	margin: 0 0 12px;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.tac {
+	text-align: center;
+}
+
+#mb-confirm p {
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-bottom: 0;
+	background-color: #fff;
+	display: block;
+}
+
+#mb-confirm p strong {
+	display: block;
+	padding-bottom: 4px;
+}
+
+strong {
+	font-weight: 600;
+}
+
+form {
+	display: block;
+}
+
+#mb-confirm fieldset {
+	margin: 0 0 20px;
+	padding: 30px 0;
+	border: 1px solid #ddd;
+	background-color: #f9f9f9;
+	text-align: center;
+	display: block;
+}
+
+#mb-confirm-id {
+	display: inline-block;
+	margin: 0 30px 0 7px;
+	font-weight: 600;
+}
+
+#mb-confirm label {
+	margin: 0 7px 0 0;
+	vertical-align: middle;
+	cursor: default;
+}
+
+#mb-confirm fieldset .frm-input {
+	background-color: #fff;
+}
+
+.frm-input {
+	padding: 0 10px;
+	font-weight: normal;
+	border: 1px solid #e1e1e1;
+	height: 30px;
+}
+
+.btn-lsmall {
+	background-color: #333;
+	border: 1px solid #333;
+	color: #fff;
+	padding: 10px 12px;
+	font-size: 14px;
+	font-weight: normal;
+	text-align: center;
+}
+
+p {
+	margin: 0;
+}
+
+.btn-confirm {
+	margin-top: 50px;
+	text-align: center;
+	font-size: 13px;
+	font-weight: 400;
+}
+
+.btn-confirm a {
+	margin: 0 1.5px;
+}
+
+.grey {
+	background-color: #888;
+	border: 1px solid #888;
+	color: #fff;
+}
+
+.btn-medium {
+	padding: 12px 20px;
+	font-size: 15px;
+	font-weight: normal;
+	width: 150px;
+	height: 40px;
+}
+
+main {
+	margin-top: 179px;
+	flex: 1;
+}
+
+
+.itemList {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	border: 2px solid #c0c0c0;
+}
+
+
+
+
+/* 마이페이지 왼쪽으로 붙이는 부분 */

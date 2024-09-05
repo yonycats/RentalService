@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin">
+
+	<select id="allUserList" resultType="kr.or.ddit.vo.UserVO">
+		select user_id userId, user_name userName, user_email userEmail, user_tel userTel, user_addr userAddr, user_addr_detail userAddrDetail, user_zip userZip, user_cnt userCnt
+		from users 
+		where user_ban = 'N'
+	</select>
+ 	
+ 	<update id="updateBlacklist" parameterType="kr.or.ddit.vo.UserVO">
+ 		update users
+		set user_ban = 'Y'
+		where user_id = #{userId} 
+ 	</update>
+ 	
+ 	<update id="deleteBlacklist" parameterType="kr.or.ddit.vo.UserVO">
+ 		update users
+		set user_ban = 'N'
+		where user_id = #{userId} 
+ 	</update>
+ 	
+ 	<select id="allBlackList" resultType="kr.or.ddit.vo.UserVO">
+ 		select user_id userId, user_name userName, user_email userEmail, user_tel userTel, user_addr userAddr, user_addr_detail userAddrDetail, user_zip userZip, user_cnt userCnt
+		from users
+		where user_ban = 'Y'
+ 	</select>
+ 	
+ 	<select id="allCompanyList" resultType="kr.or.ddit.vo.CompanyVO">
+		select com_id comId, com_name comName, com_ceo comCeo, com_addr comAddr, com_addr_detail comAddrDetail, com_zip comZip, com_tel comTel, com_email comEmail, com_resname comResname, com_restel comRestel, com_auth comAuth
+		from company
+	</select>
+</mapper>

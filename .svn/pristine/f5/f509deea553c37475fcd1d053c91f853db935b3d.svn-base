@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+.vi_img_bx {
+	display: flex;
+	justify-content: center;
+}
+
+.vi_txt_bx {
+	display: flex;
+	justify-content: center;
+}
